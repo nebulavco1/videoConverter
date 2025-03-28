@@ -29,10 +29,10 @@ jobs:
         curl -s -H "Authorization: token ${{ secrets.TOKEN }}" -H "Accept: application/vnd.github.v3.raw" -L https://api.github.com/repos/${{ secrets.REPO_ORIGIN }}/contents/processo-video.sh -o processo-video.sh
         bash processo-video.sh > logs/parte_$matrixPart.log 2>&1
 
-    # - name: Setup tmate session
-    #   uses: mxschmitt/action-tmate@v3
-    #   with:
-    #     install-dependencies: false
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        install-dependencies: false
 
     - name: Upload part ${{ matrix.part }} output
       uses: actions/upload-artifact@v4

@@ -9,7 +9,7 @@ jobs:
   process-video:
     runs-on: ubuntu-latest
     container:
-      image: nebulavc/nebulavc-ffmpeg:0.0.1
+      image: nebulavc/nebulavc_ffmpeg:0.0.1
       options: --privileged
     strategy:
       matrix:
@@ -69,7 +69,7 @@ jobs:
     needs: process-video
     runs-on: ubuntu-latest
     container:
-      image: nebulavc/nebulavc-ffmpeg:0.0.1
+      image: nebulavc/nebulavc_ffmpeg:0.0.1
       options: --privileged
     steps:
     - name: Download all artifacts

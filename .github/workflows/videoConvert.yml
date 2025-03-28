@@ -108,7 +108,8 @@ jobs:
         # Concatenate video
         echo "videoName=$(basename "$(sed 's/\/ *$//;s/\.[^.]*$//' <<< $videoURL)")" >> $GITHUB_ENV
         echo "videoOutputScale=$videoOutputScale" >> $GITHUB_ENV
-        mkdir {$videoName,logs}
+        mkdir -p {$videoName,logs}
+        ls -lha
         for download in concat-video.sh ts-video.sh; do
           curl -s -H "Authorization: token ${{ secrets.TOKEN }}" -H "Accept: application/vnd.github.v3.raw" -L https://api.github.com/repos/${{ secrets.REPO_ORIGIN }}/contents/$download -o $download
         done

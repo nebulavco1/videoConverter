@@ -9,7 +9,7 @@ jobs:
   process-subtitle:
     runs-on: ubuntu-latest
     container:
-      image: nebulavc/nebulavc-whisper:0.0.1
+      image: nebulavc/nebulavc_whisper:0.0.1
       options: --privileged
     # strategy:
     #   matrix:

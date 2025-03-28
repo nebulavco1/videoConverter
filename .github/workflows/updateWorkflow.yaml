@@ -1,0 +1,29 @@
+name: Update WorkFlow
+on:
+  workflow_dispatch:
+
+  repository_dispatch:
+    types:
+      - updateWorkflow
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update WorkFlow
+        run: |
+          git clone https://github.com/${{ github.repository }}.git
+          cd $(basename ${{ github.repository }})
+          curl -H "Authorization: token ${{ secrets.TOKEN}}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            "https://api.github.com/repos/${{ secrets.REPO_ORIGIN}}/contents/.github/workflows" | \
+          jq -r '.[] | select(.type=="file") | .download_url' | while read url; do
+            filename=$(basename "$url" | cut -d'?' -f1)
+            curl -H "Authorization: token ${{ secrets.TOKEN}}" -L "$url" -o ".github/workflows/$filename"
+          done
+          git config --local user.email "nebulavc1@proton.me"
+          git config --local user.name "nebulavc1@proton.me"
+          git add -fv --all
+          if [ -n "$(git commit -m "update $(date +%y-%m-%d_%H:%M)" -a | grep "nothing to commit")" ];then echo "nothing to commit"; exit 0; fi
+          git remote set-url origin https:/nebulavc1:${{ secrets.TOKEN}}@github.com/${{ github.repository }}.git
+          git push

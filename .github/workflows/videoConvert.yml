@@ -75,6 +75,7 @@ jobs:
     - name: Set ENVs
       env:
         videoURL: ${{ github.event.client_payload.videoURL }}
+        videoOutputScale: ${{ github.event.client_payload.videoOutputScale }}
       run: |
         # Set ENVs
         echo "videoName=$(basename "$(sed 's/\/ *$//;s/\.[^.]*$//' <<< $videoURL)")" >> $GITHUB_ENV

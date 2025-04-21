@@ -73,6 +73,8 @@ jobs:
       options: --privileged
     steps:
     - name: Set ENVs
+      env:
+        videoURL: ${{ github.event.client_payload.videoURL }}
       run: |
         # Set ENVs
         echo "videoName=$(basename "$(sed 's/\/ *$//;s/\.[^.]*$//' <<< $videoURL)")" >> $GITHUB_ENV
@@ -81,7 +83,7 @@ jobs:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: ${{ env.videoName }}_${{ env.videoOutputScale }}_parte_${{ matrix.part }}
+        pattern: ${{ env.videoName }}_${{ env.videoOutputScale }}_parte_*
         path: convert/
 
     # - name: Setup tmate session
@@ -93,13 +95,13 @@ jobs:
       if: ${{ always() }}
       run: |
         # Lista todos os artifacts
-        artifacts=$(curl -s -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/artifacts | jq -r '.artifacts[] | select(.expired == false) | .id')
+        artifacts=$(curl -s -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/artifacts | jq -r '.artifacts[] | select(.expired == false) | select(.name | startswith("${{ env.videoName }}_${{ env.videoOutputScale }}")) | .id')
 
-        # # Loop para deletar cada artifact
-        # for artifact_id in $artifacts; do
-        #   echo "Deleting artifact $artifact_id"
-        #   curl -s -X DELETE -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id
-        # done
+        # Loop para deletar cada artifact
+        for artifact_id in $artifacts; do
+          echo "Deleting artifact $artifact_id"
+          curl -s -X DELETE -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id
+        done
 
     # - name: Setup tmate session
     #   uses: mxschmitt/action-tmate@v3

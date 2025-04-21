@@ -37,9 +37,9 @@ jobs:
     - name: Upload part ${{ matrix.part }} output
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.videoName }}_${{ env.videoOutputScale }}_part_${{ matrix.part }}
+        name: ${{ env.videoName }}_${{ env.videoOutputScale }}_parte_${{ matrix.part }}
         path: |
-          ${{ env.videoName }}_${{ env.videoOutputScale }}_part_${{ matrix.part }}
+          ${{ env.videoName }}_${{ env.videoOutputScale }}_parte_${{ matrix.part }}
 
     - name: Upload log to bucket
       if: ${{ always() }}
@@ -81,7 +81,7 @@ jobs:
     - name: Download all artifacts
       uses: actions/download-artifact@v4
       with:
-        name: ${{ env.videoName }}_${{ env.videoOutputScale }}_part_${{ matrix.part }}
+        name: ${{ env.videoName }}_${{ env.videoOutputScale }}_parte_${{ matrix.part }}
         path: convert/
 
     # - name: Setup tmate session
@@ -95,11 +95,11 @@ jobs:
         # Lista todos os artifacts
         artifacts=$(curl -s -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/artifacts | jq -r '.artifacts[] | select(.expired == false) | .id')
 
-        # # Loop para deletar cada artifact
-        # for artifact_id in $artifacts; do
-        #   echo "Deleting artifact $artifact_id"
-        #   curl -s -X DELETE -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id
-        # done
+        # Loop para deletar cada artifact
+        for artifact_id in $artifacts; do
+          echo "Deleting artifact $artifact_id"
+          curl -s -X DELETE -H "Authorization: token ${{ secrets.TOKEN }}" https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id
+        done
 
     # - name: Setup tmate session
     #   uses: mxschmitt/action-tmate@v3

@@ -1,9 +1,9 @@
 name: Subtitle Transcription
 
-on:
-  repository_dispatch:
-    types:
-      - subtitleTranscription
+# on:
+#   repository_dispatch:
+#     types:
+#       - subtitleTranscription
 
 jobs:
   process-subtitle:

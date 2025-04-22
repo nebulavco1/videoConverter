@@ -85,7 +85,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         pattern: ${{ env.videoName }}_${{ env.videoOutputScale }}_parte_*
-        path: convert/
+        path: artefact/
 
     # - name: Setup tmate session
     #   uses: mxschmitt/action-tmate@v3
